@@ -1,7 +1,7 @@
 # Claude Code Research Reports
 
 [![Version](https://img.shields.io/badge/Claude_Code-v2.1.88-blueviolet?style=for-the-badge)](https://www.npmjs.com/package/@anthropic-ai/claude-code)
-[![Reports](https://img.shields.io/badge/Research_Reports-12%2B-red?style=for-the-badge)](docs/)
+[![Reports](https://img.shields.io/badge/Research_Reports-20-red?style=for-the-badge)](docs/)
 
 Independent research reports on **Claude Code v2.1.88**, focused on architecture, agent behavior, permission design, prompt assembly, MCP integration, and context management.
 
@@ -24,12 +24,34 @@ These reports are based on technical analysis of a **publicly distributed npm pa
 
 ---
 
+## What This Repository Covers
+
+This repository is designed to answer a fairly specific set of questions about Claude Code:
+
+- How is Claude Code architected internally?
+- How does the main agent loop actually work?
+- How are tools registered, validated, permission-checked, and executed?
+- How is the system prompt assembled from static and dynamic parts?
+- What telemetry and privacy-relevant data paths exist?
+- How does the permission model work in practice?
+- How does Claude Code integrate with MCP servers and external tools?
+- How does it manage context pressure, compaction, and session persistence?
+- What hidden features, internal codenames, and remote control mechanisms exist in the codebase?
+
+If someone lands here searching for Claude Code internals, Claude Code architecture, Claude Code source analysis, Claude Code system prompts, Claude Code telemetry, or Claude Code MCP integration, this repository is meant to be a useful entry point.
+
+---
+
 ## Research Reports
 
 ### Core Architecture Analysis
 
 | # | Report | What You'll Learn | Link |
 |---|--------|-------------------|------|
+| 13 | **Architecture Overview** | A system-level synthesis of how Claude Code fits together across prompt assembly, agent loop, tools, permissions, compaction, persistence, and MCP | [Read →](docs/en/13-claude-code-architecture-overview.md) |
+| 14 | **BashTool Security & Execution** | How Claude Code validates shell input, classifies read-only commands, routes sandboxed execution, and turns Bash into a controllable tool surface | [Read →](docs/en/14-bash-tool-security-and-execution.md) |
+| 15 | **Memory & Instruction System** | How CLAUDE.md, MEMORY.md, session memory, and instruction layering shape long-session behavior and prompt continuity | [Read →](docs/en/15-memory-and-instruction-system.md) |
+| 16 | **Transcripts, Compaction & Resume** | How transcript chains, sidechains, compact boundaries, resume, and session continuity work under the hood | [Read →](docs/en/16-transcripts-compaction-and-session-resume.md) |
 | 06 | **Agent Loop Deep Dive** | The 785KB `query.ts` dissected — message flow, streaming tool execution, auto-compaction, error recovery, sub-agent spawning | [Read →](docs/en/06-agent-loop-deep-dive.md) |
 | 07 | **Tool System Architecture** | How 40+ tools are registered, validated, permission-checked, and executed in parallel. The `buildTool` factory pattern. | [Read →](docs/en/07-tool-system-architecture.md) |
 | 08 | **Permission & Security Model** | Allowlists, blocklists, auto-approve rules, YOLO mode, sandbox integration, and the permission decision tree | [Read →](docs/en/08-permission-security-model.md) |
@@ -37,6 +59,10 @@ These reports are based on technical analysis of a **publicly distributed npm pa
 | 10 | **MCP Integration & Plugin System** | Model Context Protocol client implementation — server lifecycle, tool discovery, OAuth, and transport layers | [Read →](docs/en/10-mcp-integration.md) |
 | 11 | **Context Window Management** | Auto-compaction, conversation compression, token counting, and how Claude Code fights the context limit | [Read →](docs/en/11-context-window-management.md) |
 | 12 | **State Management & Persistence** | Session state, conversation history, memory system, file persistence, and cross-session data flow | [Read →](docs/en/12-state-management.md) |
+| 17 | **Bridge System & Remote Sessions** | How Claude Desktop talks to the CLI — session lifecycle, JWT auth, work secrets, multi-session coordination, capacity management | [Read →](docs/en/17-bridge-system-and-remote-sessions.md) |
+| 18 | **React/Ink Terminal UI** | Using React to render a TUI — Yoga layout, custom components, event system, streaming output, performance optimization | [Read →](docs/en/18-react-ink-terminal-ui.md) |
+| 19 | **Streaming & Transport Layers** | WebSocket/SSE/HTTP hybrid transport, batch uploading, backpressure, NDJSON protocol, reconnection logic | [Read →](docs/en/19-streaming-and-transport-layers.md) |
+| 20 | **Slash Commands & Cost Tracking** | 80+ command registry, fuzzy search, feature-gated commands, token-to-USD cost tracking, billing integration | [Read →](docs/en/20-slash-commands-and-cost-tracking.md) |
 
 ### Discovery & Investigation Reports
 
@@ -47,6 +73,48 @@ These reports are based on technical analysis of a **publicly distributed npm pa
 | 03 | **Undercover Mode** | How Anthropic employees can hide AI authorship signals in public repos | [Read →](docs/en/03-undercover-mode.md) |
 | 04 | **Remote Control & Killswitches** | Server-side settings, blocking dialogs, GrowthBook flags, and emergency controls | [Read →](docs/en/04-remote-control-and-killswitches.md) |
 | 05 | **Future Roadmap** | KAIROS, Numbat, future model hints, unreleased tools, and roadmap clues | [Read →](docs/en/05-future-roadmap.md) |
+
+---
+
+## Reading Guide
+
+### Start here if you want the big picture
+
+- [Architecture Overview](docs/en/13-claude-code-architecture-overview.md)
+- [Agent Loop Deep Dive](docs/en/06-agent-loop-deep-dive.md)
+- [Tool System Architecture](docs/en/07-tool-system-architecture.md)
+- [Permission & Security Model](docs/en/08-permission-security-model.md)
+- [BashTool Security](docs/en/14-bash-tool-security-and-execution.md)
+
+### Read these if you care about prompts, memory, and context
+
+- [System Prompt Engineering](docs/en/09-system-prompt-engineering.md)
+- [Memory & Instruction System](docs/en/15-memory-and-instruction-system.md)
+- [Context Window Management](docs/en/11-context-window-management.md)
+- [State Management](docs/en/12-state-management.md)
+- [Transcripts, Compaction & Resume](docs/en/16-transcripts-compaction-and-session-resume.md)
+
+### Read these if you care about infrastructure and networking
+
+- [Bridge System & Remote Sessions](docs/en/17-bridge-system-and-remote-sessions.md)
+- [React/Ink Terminal UI](docs/en/18-react-ink-terminal-ui.md)
+- [Streaming & Transport Layers](docs/en/19-streaming-and-transport-layers.md)
+- [Slash Commands & Cost Tracking](docs/en/20-slash-commands-and-cost-tracking.md)
+- [MCP Integration](docs/en/10-mcp-integration.md)
+
+### Read these if you care about security, privacy, or control surfaces
+
+- [Telemetry & Privacy](docs/en/01-telemetry-and-privacy.md)
+- [Remote Control & Killswitches](docs/en/04-remote-control-and-killswitches.md)
+- [Permission & Security Model](docs/en/08-permission-security-model.md)
+
+### Read these if you care about unusual or hidden behavior
+
+- [Hidden Features & Codenames](docs/en/02-hidden-features-and-codenames.md)
+- [Undercover Mode](docs/en/03-undercover-mode.md)
+- [Future Roadmap](docs/en/05-future-roadmap.md)
+
+For a topic-based report index, see [docs/en/README.md](docs/en/README.md).
 
 ---
 
@@ -181,6 +249,12 @@ QUICKSTART.md
 - Treat this repository as a documentation archive, not a software distribution
 
 See [QUICKSTART.md](QUICKSTART.md) for a minimal reading guide.
+
+---
+
+## Keywords
+
+Claude Code, Anthropic, Claude Code source analysis, Claude Code architecture, Claude Code agent loop, Claude Code system prompts, Claude Code telemetry, Claude Code permission model, Claude Code MCP, Claude Code hidden features, Claude Code reverse engineering, AI coding agent architecture, Model Context Protocol, prompt engineering, context management, persistence, security research
 
 ---
 
