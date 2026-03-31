@@ -2,7 +2,7 @@
 
 ## 1. Why React for a Terminal UI?
 
-The first time I opened the `src/ink/` directory in Claude Code's source tree, I had to do a double-take. React? In a terminal? With Yoga layout? A full DOM-style event system with capture and bubble phases? This is not your typical ncurses affair.
+Opening the `src/ink/` directory in Claude Code's source tree is a double-take moment. React? In a terminal? With Yoga layout? A full DOM-style event system with capture and bubble phases? This is not your typical ncurses affair.
 
 Claude Code's terminal UI is built on a heavily customized fork of [Ink](https://github.com/vadimdemedes/ink) -- the React renderer for command-line interfaces. But calling it "Ink" at this point is like calling a Formula 1 car a "Honda." The team has essentially rebuilt the rendering pipeline from scratch: a custom React reconciler wired to Yoga for flexbox layout, a cell-based screen buffer with interned style pools, a diff-based terminal update system, mouse tracking, text selection, hardware scroll regions, and a full DOM-style event dispatcher with capture/bubble phases. There are 346 application-level `.tsx` components in `src/components/` alone.
 
@@ -10,7 +10,7 @@ The payoff is enormous. React's declarative model means the entire Claude Code i
 
 ## 2. The Rendering Pipeline
 
-The rendering pipeline flows through four distinct phases: reconciliation, layout, painting, and terminal output. Let me trace a frame from React state change to pixels on screen.
+The rendering pipeline flows through four distinct phases: reconciliation, layout, painting, and terminal output. The following traces a frame from React state change to pixels on screen.
 
 It starts in `src/ink/reconciler.ts`, which creates a custom React reconciler using `react-reconciler`:
 
@@ -136,7 +136,7 @@ export type Props = Except<Styles, 'textWrap'> & {
 };
 ```
 
-Yes, `onClick` and `onMouseEnter` in a terminal. We will get to that.
+Yes, `onClick` and `onMouseEnter` in a terminal. More on that below.
 
 **Text** (`src/ink/components/Text.tsx`) handles styled text output with color, bold, italic, underline, strikethrough, and inverse. Bold and dim are enforced as mutually exclusive via TypeScript's discriminated union:
 
@@ -200,7 +200,7 @@ Beyond the primitives, the `src/components/design-system/` directory contains hi
 
 ## 5. Event System
 
-The event system in `src/ink/events/` is a faithful port of the browser's DOM event model. I mean that literally -- it implements capture and bubble phases with propagation control.
+The event system in `src/ink/events/` is a faithful port of the browser's DOM event model. That is literal -- it implements capture and bubble phases with propagation control.
 
 `TerminalEvent` (`src/ink/events/terminal-event.ts`) is the base class, mirroring `Event`:
 

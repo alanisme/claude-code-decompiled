@@ -2,7 +2,7 @@
 
 ## 1. 为什么在终端里用React？
 
-第一次打开Claude Code源码中的`src/ink/`目录时，我确实愣了一下。React？在终端里？还有Yoga布局引擎？一个完整的带捕获和冒泡阶段的DOM风格事件系统？这显然不是你印象中的ncurses程序。
+初次打开Claude Code源码中的`src/ink/`目录时，确实令人意外。React？在终端里？还有Yoga布局引擎？一个完整的带捕获和冒泡阶段的DOM风格事件系统？这显然不是你印象中的ncurses程序。
 
 Claude Code的终端UI构建在一个深度定制的[Ink](https://github.com/vadimdemedes/ink)分支之上 -- 但说它是"Ink"已经有点名不副实了，就像把F1赛车叫"本田"一样。团队基本上从头重建了整个渲染管线：一个自定义React reconciler连接到Yoga做flexbox布局，一个基于cell的屏幕缓冲区配合内联样式池，一个基于diff的终端更新系统，鼠标追踪，文本选择，硬件滚动区域，以及带捕获/冒泡阶段的完整DOM风格事件分发器。仅`src/components/`就有346个应用级`.tsx`组件。
 
@@ -10,7 +10,7 @@ Claude Code的终端UI构建在一个深度定制的[Ink](https://github.com/vad
 
 ## 2. 渲染管线
 
-渲染管线流经四个阶段：reconciliation、layout、painting和terminal output。让我从React状态变更追踪到屏幕上的像素。
+渲染管线流经四个阶段：reconciliation、layout、painting和terminal output。下面从React状态变更追踪到屏幕上的像素。
 
 起点在`src/ink/reconciler.ts`，它创建了一个自定义React reconciler：
 
@@ -116,9 +116,9 @@ export type Props = Except<Styles, 'textWrap'> & {
 };
 ```
 
-没错，终端里的`onClick`和`onMouseEnter`。稍后我会解释这是怎么实现的。
+没错，终端里的`onClick`和`onMouseEnter`。其实现机制将在后文详述。
 
-**ScrollBox**（`src/ink/components/ScrollBox.tsx`）可能是最令我印象深刻的基础组件。它通过`useImperativeHandle`暴露了完整的命令式滚动API：
+**ScrollBox**（`src/ink/components/ScrollBox.tsx`）可能是最值得关注的基础组件。它通过`useImperativeHandle`暴露了完整的命令式滚动API：
 
 ```typescript
 // src/ink/components/ScrollBox.tsx:10-62
@@ -157,7 +157,7 @@ function scrollMutated(el: DOMElement): void {
 
 ## 5. 事件系统
 
-`src/ink/events/`中的事件系统是浏览器DOM事件模型的忠实移植 -- 我说的是字面意义上的，它实现了带传播控制的捕获和冒泡阶段。
+`src/ink/events/`中的事件系统是浏览器DOM事件模型的忠实移植——字面意义上的移植，它实现了带传播控制的捕获和冒泡阶段。
 
 `Dispatcher`（`src/ink/events/dispatcher.ts`）实现了react-dom的两阶段收集模式。事件触发时，它从目标节点到根节点遍历，收集处理器：
 

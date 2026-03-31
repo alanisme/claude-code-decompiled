@@ -1,6 +1,6 @@
 # MCP Integration in Claude Code: A Deep Technical Analysis
 
-Claude Code's MCP (Model Context Protocol) implementation is one of the most complete client-side MCP integrations I have seen in a production tool. It supports every transport the protocol defines, handles OAuth flows end-to-end, manages server lifecycles with automatic reconnection, and wires discovered tools directly into the model's tool-use loop. This document traces the architecture from transport negotiation through tool invocation, with references to the actual source.
+Claude Code's MCP (Model Context Protocol) implementation is one of the most complete client-side MCP integrations observed in a production tool. It supports every transport the protocol defines, handles OAuth flows end-to-end, manages server lifecycles with automatic reconnection, and wires discovered tools directly into the model's tool-use loop. This document traces the architecture from transport negotiation through tool invocation, with references to the actual source.
 
 ---
 

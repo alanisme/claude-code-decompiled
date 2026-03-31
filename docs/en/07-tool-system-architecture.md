@@ -6,7 +6,7 @@ A deep-dive into how Claude Code defines, registers, validates, permits, and exe
 
 ## 1. The buildTool Factory
 
-Every tool in Claude Code goes through a single factory function: `buildTool`. I want to emphasize how clean this decision is -- having one factory that produces complete `Tool` objects from partial definitions means there is exactly one place where defaults are established and one contract that every tool must satisfy.
+Every tool in Claude Code goes through a single factory function: `buildTool`. It is worth emphasizing how clean this decision is -- having one factory that produces complete `Tool` objects from partial definitions means there is exactly one place where defaults are established and one contract that every tool must satisfy.
 
 The factory lives at the bottom of `src/Tool.ts` (line 783):
 
@@ -38,7 +38,7 @@ Notice: `isConcurrencySafe` defaults to `false` (assume not safe) and `isReadOnl
 
 ### The Tool Interface
 
-The full `Tool` type is enormous -- over 60 fields and methods spanning rendering, permissions, execution, progress reporting, and search indexing. A few that stood out to me:
+The full `Tool` type is enormous -- over 60 fields and methods spanning rendering, permissions, execution, progress reporting, and search indexing. A few that stand out:
 
 - **`call()`** -- The actual execution. Takes parsed input, the full `ToolUseContext`, a `canUseTool` permission callback, the parent assistant message, and an optional progress callback.
 - **`validateInput()`** -- Pre-execution validation that can reject with a message. This runs *before* permissions, which is important: you don't want to prompt the user for approval of an invalid operation.
@@ -46,7 +46,7 @@ The full `Tool` type is enormous -- over 60 fields and methods spanning renderin
 - **`prompt()`** -- Returns text that gets injected into the system prompt to tell the model how to use this tool.
 - **`mapToolResultToToolResultBlockParam()`** -- Converts the tool's typed output into the API's `tool_result` format.
 - **`maxResultSizeChars`** -- A per-tool threshold for when results get persisted to disk instead of staying inline. The FileReadTool sets this to `Infinity` to avoid a circular read-persist-read loop.
-- **`shouldDefer`** and **`alwaysLoad`** -- Controls for the ToolSearch deferred-loading system, which I'll cover later.
+- **`shouldDefer`** and **`alwaysLoad`** -- Controls for the ToolSearch deferred-loading system, covered later in this document.
 
 The `ToolDef` type (line 721) is a lighter version of `Tool` where the defaultable methods are optional. This is what tool authors actually write against -- `buildTool` fills in the rest. The `satisfies ToolDef<...>` pattern at the end of each tool file provides type safety without the boilerplate of implementing every method.
 
@@ -68,7 +68,7 @@ That `_simulatedSedEdit` omission is a security measure -- it's an internal fiel
 
 ## 2. Tool Registry
 
-The tool registry lives in `src/tools.ts`. There is no declarative configuration file, no plugin manifest -- it's a plain TypeScript module that imports tools and assembles them into arrays. I have mixed feelings about this. On one hand, it is explicit and greppable. On the other hand, `getAllBaseTools()` (line 193) is a 60-line function of conditional spreads:
+The tool registry lives in `src/tools.ts`. There is no declarative configuration file, no plugin manifest -- it's a plain TypeScript module that imports tools and assembles them into arrays. This is a mixed design choice. On one hand, it is explicit and greppable. On the other hand, `getAllBaseTools()` (line 193) is a 60-line function of conditional spreads:
 
 ```typescript
 export function getAllBaseTools(): Tools {
@@ -251,7 +251,7 @@ BashTool is the most complex tool in the system, spanning nearly 20 files in `sr
 
 ### FileEditTool: Exact-Match Replacement
 
-FileEditTool's design philosophy is conservative and explicit. Rather than supporting regex replacements or line-range edits, it requires an *exact string match* of the text to replace. This is a deliberate choice that I find quite smart.
+FileEditTool's design philosophy is conservative and explicit. Rather than supporting regex replacements or line-range edits, it requires an *exact string match* of the text to replace. This is a deliberate and quite smart design choice.
 
 The core algorithm in `call()` (line 387 of `FileEditTool.ts`):
 1. Read the current file content synchronously (to maintain atomicity)

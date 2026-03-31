@@ -2,7 +2,7 @@
 
 If you want to understand how an AI coding agent *actually* works at the systems level, forget the marketing pages. Open `src/query.ts`. At 1,729 lines, it is the single largest file in Claude Code's codebase, and it is where every user message enters, every tool call is dispatched, every error is recovered from, and every response eventually exits. This file is the beating heart of the entire system.
 
-I spent a couple of days reading through it and the surrounding modules, and what I found is a surprisingly honest piece of production engineering. Not a clean-room research prototype, but a system that has clearly been shaped by thousands of real-world failure modes. Let me walk you through it.
+Extensive reading through this file and the surrounding modules reveals a surprisingly honest piece of production engineering. Not a clean-room research prototype, but a system that has clearly been shaped by thousands of real-world failure modes. The following sections walk through it.
 
 ## 1. What query.ts Is (and Why It's One Giant File)
 
@@ -105,7 +105,7 @@ for await (const message of deps.callModel({
 }
 ```
 
-One detail that took me a while to appreciate: the code carefully clones assistant messages before yielding them to SDK consumers, but keeps the originals for the API message history. This is because `backfillObservableInput` adds derived fields (like expanded file paths) that SDK consumers want to see, but sending them back to the API would break prompt cache hits due to byte mismatches. That level of cache awareness is threaded throughout the entire system.
+One detail worth appreciating: the code carefully clones assistant messages before yielding them to SDK consumers, but keeps the originals for the API message history. This is because `backfillObservableInput` adds derived fields (like expanded file paths) that SDK consumers want to see, but sending them back to the API would break prompt cache hits due to byte mismatches. That level of cache awareness is threaded throughout the entire system.
 
 ## 3. Streaming Tool Execution
 
@@ -193,7 +193,7 @@ It partitions tool calls into consecutive batches of concurrent-safe or serial t
 
 ## 4. Error Recovery
 
-The error recovery in `query.ts` is extensive. I count at least seven distinct recovery mechanisms, each addressing a different failure mode.
+The error recovery in `query.ts` is extensive. There are at least seven distinct recovery mechanisms, each addressing a different failure mode.
 
 ### Model Fallback
 

@@ -293,7 +293,7 @@ Claude Code 对 `sed -i` 一类原地编辑命令的处理非常说明问题。
 
 ## 12. BashTool 基本浓缩了整个产品的设计哲学
 
-如果让我找一个最能体现 Claude Code 工程哲学的子系统，BashTool 会是候选之一。
+如果要找一个最能体现 Claude Code 工程哲学的子系统，BashTool 会是候选之一。
 
 因为它把很多共性都集中展示出来了：
 

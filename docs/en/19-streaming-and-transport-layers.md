@@ -6,7 +6,7 @@ When you are building a coding agent that streams token-by-token responses from 
 
 Claude Code operates in multiple deployment modes: local CLI talking to stdout, an SDK embedded in VS Code, and a remote session running behind Cloudflare proxies where your laptop might sleep mid-conversation. Each of these environments has radically different reliability characteristics. A local pipe never drops a message. A WebSocket through a corporate proxy might get RST'd after five minutes of idle. An SSE stream from a server on the other side of the planet might stall for 30 seconds and then dump a backlog of events.
 
-What I found in the Claude Code transport layer is a carefully layered system that handles all of this. There is a clean `Transport` interface, three concrete implementations (WebSocket, Hybrid, SSE), a serialized batch uploader with backpressure, a structured I/O protocol for SDK mode, and a set of thoughtful edge-case handling around sleep/wake detection, NDJSON safety, and graceful shutdown. Let me walk through all of it.
+The Claude Code transport layer is a carefully layered system that handles all of this. There is a clean `Transport` interface, three concrete implementations (WebSocket, Hybrid, SSE), a serialized batch uploader with backpressure, a structured I/O protocol for SDK mode, and a set of thoughtful edge-case handling around sleep/wake detection, NDJSON safety, and graceful shutdown. The following sections walk through all of it.
 
 ## 2. Transport Abstraction -- The Transport Interface and Its Implementations
 
@@ -104,7 +104,7 @@ void Promise.race([
 })
 ```
 
-The transport gives queued writes up to 3 seconds to drain on close, then hard-stops. The `close()` method itself remains synchronous (returns immediately) -- the grace period runs in the background. This is the kind of pragmatic compromise I appreciate: best-effort delivery without blocking shutdown.
+The transport gives queued writes up to 3 seconds to drain on close, then hard-stops. The `close()` method itself remains synchronous (returns immediately) -- the grace period runs in the background. This is a pragmatic compromise: best-effort delivery without blocking shutdown.
 
 ## 4. SSE Transport -- Server-Sent Events with Reconnection
 
@@ -207,7 +207,7 @@ private takeBatch(): T[] {
 }
 ```
 
-I especially like the silent drop of un-serializable items (BigInt, circular refs, throwing `toJSON`). Without this, a single poison-pill event would jam the queue forever.
+The silent drop of un-serializable items (BigInt, circular refs, throwing `toJSON`). Without this, a single poison-pill event would jam the queue forever.
 
 The `RetryableError` class supports server-provided `Retry-After` values, clamped and jittered to prevent thundering herd:
 

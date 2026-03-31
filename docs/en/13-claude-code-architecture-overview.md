@@ -342,7 +342,7 @@ That is exactly how modern SaaS-style agent products behave in practice.
 
 ## 11. What the Architecture Optimizes For
 
-After reading across the codebase, I think Claude Code is optimized for the following priorities:
+After reading across the codebase, Claude Code appears to be optimized for the following priorities:
 
 ### 1. Real-world robustness over conceptual neatness
 

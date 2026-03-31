@@ -4,11 +4,11 @@
 
 ## The Animal Codename System
 
-One of the more entertaining findings from digging through the source: Anthropic names their models after animals. And they go to considerable lengths to keep those names from leaking.
+One of the more entertaining findings from the source: Anthropic names their models after animals. And they go to considerable lengths to keep those names from leaking.
 
-### Codenames I Found
+### Codenames Found
 
-| Codename | What It Is | How I Found It |
+| Codename | What It Is | How It Was Found |
 |----------|-----------|----------------|
 | **Tengu** (天狗) | Product/telemetry prefix — appears in 250+ analytics event names and feature flags | Everywhere in the codebase |
 | **Capybara** | Sonnet-series model, currently at v8 | `capybara-v2-fast[1m]`, plus prompt patches referencing v8 behavior issues |
@@ -17,7 +17,7 @@ One of the more entertaining findings from digging through the source: Anthropic
 
 ### How They Protect Codenames
 
-The undercover mode (covered in detail in my separate write-up) explicitly lists what must never leak:
+The undercover mode (covered in detail in a separate write-up) explicitly lists what must never leak:
 
 ```typescript
 // src/utils/undercover.ts:48-49
@@ -26,7 +26,7 @@ NEVER include in commit messages or PR descriptions:
 - Unreleased model version numbers (e.g., opus-4-7, sonnet-4-8)
 ```
 
-The build system uses `scripts/excluded-strings.txt` to scan compiled output for accidentally included codenames. What caught my eye is a particularly clever workaround in the buddy system (the virtual pet feature). One of the pet species is "capybara" — which collides with the model codename. So the developers construct the species name at runtime using `String.fromCharCode()` to avoid tripping the build scanner:
+The build system uses `scripts/excluded-strings.txt` to scan compiled output for accidentally included codenames. A notably clever workaround in the buddy system (the virtual pet feature). One of the pet species is "capybara" — which collides with the model codename. So the developers construct the species name at runtime using `String.fromCharCode()` to avoid tripping the build scanner:
 
 ```typescript
 // src/buddy/types.ts:10-13
@@ -39,7 +39,7 @@ This is the kind of accidental-complexity-meets-clever-hack that makes reverse e
 
 ### Capybara v8 Is Having a Rough Time
 
-The source code is surprisingly candid about Capybara v8's behavioral issues. I found dedicated prompt patches for five distinct problems:
+The source code is surprisingly candid about Capybara v8's behavioral issues. There are dedicated prompt patches for five distinct problems:
 
 1. **Stop sequence false triggers** — roughly 10% of the time when `<functions>` appears at the end of the prompt. That's a high rate for something that should be reliable. (`src/utils/messages.ts:2141`)
 
@@ -55,7 +55,7 @@ Seeing these numbers baked into the source code is fascinating. It gives you a r
 
 ## Feature Flags: Deliberately Obscure
 
-All feature flags use the `tengu_` prefix followed by **random word pairs**. This is intentional — it prevents anyone outside Anthropic from guessing what a flag controls just by reading its name. Here's what I managed to map:
+All feature flags use the `tengu_` prefix followed by **random word pairs**. This is intentional — it prevents anyone outside Anthropic from guessing what a flag controls just by reading its name. Here is what the analysis managed to map:
 
 | Flag | What It Actually Does |
 |------|----------------------|
@@ -104,7 +104,7 @@ The engineering reasoning probably makes sense (you test features internally bef
 
 ## Hidden Slash Commands
 
-I also found some undocumented commands:
+The source also contains some undocumented commands:
 
 | Command | Status | What It Does |
 |---------|--------|-------------|

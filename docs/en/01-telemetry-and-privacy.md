@@ -4,7 +4,7 @@
 
 ## The Big Picture
 
-I spent a good chunk of time tracing through the decompiled telemetry code in Claude Code, and here's the short version: it runs a two-tier analytics pipeline that collects a *lot* of environment and usage metadata. I didn't find any evidence of keylogging or source code exfiltration — that's the good news. The less-good news is the sheer breadth of what gets collected, and how hard it is to actually opt out.
+After thorough tracing through the decompiled telemetry code in Claude Code, the short version is: it runs a two-tier analytics pipeline that collects a *lot* of environment and usage metadata. There is no evidence of keylogging or source code exfiltration — that's the good news. The less-good news is the sheer breadth of what gets collected, and how hard it is to actually opt out.
 
 ## How the Data Pipeline Works
 
@@ -17,7 +17,7 @@ This is the main telemetry channel, and the engineering here is pretty robust �
 - **Batch size**: Up to 200 events per batch, flushed every 10 seconds
 - **Retry logic**: Quadratic backoff, up to 8 attempts, and here's the kicker — failed events are **persisted to disk** at `~/.claude/telemetry/` so they can be retried later
 
-That persistence detail caught my eye. It means even if your network goes down mid-session, those telemetry events are waiting patiently on disk to be shipped out the next time you connect.
+That persistence detail is notable. It means even if your network goes down mid-session, those telemetry events are waiting patiently on disk to be shipped out the next time you connect.
 
 Source: `src/services/analytics/firstPartyEventLoggingExporter.ts`
 
@@ -48,7 +48,7 @@ Every single telemetry event carries this metadata payload (from `src/services/a
 - deployment environment
 ```
 
-Honestly, this surprised me. The level of environment profiling goes well beyond what I'd consider necessary for a coding assistant. Knowing your terminal type and installed package managers? That starts to feel like product analytics doing market research, not just debugging telemetry.
+This is surprising. The level of environment profiling goes well beyond what seems necessary for a coding assistant. Knowing your terminal type and installed package managers? That starts to feel like product analytics doing market research, not just debugging telemetry.
 
 ### Process Metrics (`metadata.ts:457-467`)
 
@@ -90,7 +90,7 @@ Source: `metadata.ts:236-241`
 
 Source: `metadata.ts:86-88`
 
-I'd love to know under what circumstances this gets enabled. If it's only for internal debugging, fine. But it's worth knowing it exists.
+The circumstances under which this gets enabled are worth investigating. If it's only for internal debugging, fine. But it's worth knowing it exists.
 
 ### File Extension Tracking
 
@@ -120,7 +120,7 @@ So there is technically a mechanism — but no user-facing way to reach it. If y
 
 ## A/B Testing Without Consent
 
-I also found GrowthBook integration for experiment assignment. Users get bucketed into A/B test groups, and the system sends user attributes including:
+The source also reveals GrowthBook integration for experiment assignment. Users get bucketed into A/B test groups, and the system sends user attributes including:
 
 ```
 - id, sessionId, deviceID

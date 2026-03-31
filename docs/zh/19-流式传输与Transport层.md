@@ -6,7 +6,7 @@
 
 Claude Code运行在多种部署模式下：本地CLI对stdout输出、嵌入VS Code的SDK、以及运行在Cloudflare代理后面的远程会话（你的笔记本可能在对话中途休眠）。每种环境有截然不同的可靠性特征。本地管道永远不会丢消息。经过企业代理的WebSocket可能在空闲5分钟后被RST。来自地球另一端服务器的SSE流可能停滞30秒然后倾泻积压事件。
 
-我在Claude Code传输层发现的是一个精心分层的系统。它有一个清晰的`Transport`接口、三个具体实现（WebSocket、Hybrid、SSE）、一个带背压的序列化批量上传器、SDK模式的结构化I/O协议，以及围绕睡眠/唤醒检测、NDJSON安全性和优雅关闭的周到边界情况处理。
+Claude Code传输层是一个精心分层的系统。它有一个清晰的`Transport`接口、三个具体实现（WebSocket、Hybrid、SSE）、一个带背压的序列化批量上传器、SDK模式的结构化I/O协议，以及围绕睡眠/唤醒检测、NDJSON安全性和优雅关闭的周到边界情况处理。
 
 ## 2. Transport抽象 -- 接口与三种实现
 
@@ -84,7 +84,7 @@ void Promise.race([
 })
 ```
 
-给排队的写入最多3秒来排空，然后硬停。`close()`本身保持同步（立即返回）-- grace period在后台运行。这是我欣赏的务实妥协：尽力投递但不阻塞关闭。
+给排队的写入最多3秒来排空，然后硬停。`close()`本身保持同步（立即返回）-- grace period在后台运行。这是一个务实的妥协：尽力投递但不阻塞关闭。
 
 ## 4. SSE Transport -- 带重连的Server-Sent Events
 
@@ -138,7 +138,7 @@ while (
 
 `takeBatch()`方法支持基于计数和基于字节的批处理。第一项无论大小都会被包含（防止超大事件的队头阻塞），后续项只在符合`maxBatchBytes`时才添加。
 
-我特别喜欢对不可序列化项（BigInt、循环引用）的静默丢弃。没有这个，一个毒丸事件会永远阻塞队列：
+对不可序列化项（BigInt、循环引用）的静默丢弃设计尤为精妙。没有这个，一个毒丸事件会永远阻塞队列：
 
 ```typescript
 // src/cli/transports/SerialBatchEventUploader.ts:213-233

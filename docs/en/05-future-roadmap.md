@@ -1,10 +1,10 @@
 # What's Coming Next for Claude Code: Unreleased Features Hiding in the Source
 
-*Everything I found about upcoming models, autonomous agents, and hidden tools in Claude Code v2.1.88*
+*Everything the source reveals about upcoming models, autonomous agents, and hidden tools in Claude Code v2.1.88*
 
 ## 1. The Next Model: Numbat
 
-The clearest signal I found about what's coming next:
+The clearest signal about what's coming next:
 
 ```typescript
 // src/constants/prompts.ts:402
@@ -45,7 +45,7 @@ The Fennec-to-Opus migration is well-documented in the codebase:
 
 ### The MODEL LAUNCH Checklist
 
-I found 20+ `@[MODEL LAUNCH]` markers scattered across the codebase — essentially a launch checklist embedded in code comments. When a new model ships, engineers need to update:
+The codebase contains 20+ `@[MODEL LAUNCH]` markers scattered across the codebase — essentially a launch checklist embedded in code comments. When a new model ships, engineers need to update:
 
 - Default model names (`FRONTIER_MODEL_NAME`)
 - Model family IDs
@@ -60,7 +60,7 @@ This is solid engineering practice. Having the checklist live in the code itself
 
 ## 2. KAIROS: The Autonomous Agent Mode
 
-This is the biggest unreleased feature I found, and it's ambitious. KAIROS transforms Claude Code from a tool you interact with into an agent that operates independently.
+This is the biggest unreleased feature in the codebase, and it is ambitious. KAIROS transforms Claude Code from a tool you interact with into an agent that operates independently.
 
 ### How It Thinks About Itself
 
@@ -111,7 +111,7 @@ The OAuth-only restriction suggests this might be tied to Anthropic's consumer p
 
 ## 4. Unreleased Tools Sitting in the Source
 
-I found a whole collection of tools that are built but not enabled for external users:
+The source contains a whole collection of tools that are built but not enabled for external users:
 
 | Tool | Feature Flag | What It Does |
 |------|-------------|-------------|
@@ -153,7 +153,7 @@ This one's just fun. There's a complete virtual pet companion system implemented
 
 Source: `src/buddy/`
 
-It's a gacha system for developer tools. I kind of love it? The SNARK stat on a coding companion is a nice touch.
+It is a gacha system for developer tools. The SNARK stat on a coding companion is a nice touch.
 
 ## 7. Dream Task (Background Memory)
 
@@ -175,4 +175,4 @@ Looking at these features together, three clear directions emerge:
 
 The trajectory is unmistakable. Claude Code is evolving from a coding assistant you chat with into an always-on autonomous development agent that monitors your repos, makes decisions, coordinates with other agents, and reaches out when it needs you.
 
-Whether that future excites or concerns you probably depends on how much you trust the remote control infrastructure I documented in my previous report. An autonomous agent with extensive remote killswitches and no user-facing audit log is a powerful tool — and a significant amount of trust to place in any single vendor.
+Whether that future excites or concerns readers probably depends on how much trust is placed in the remote control infrastructure documented in the previous report. An autonomous agent with extensive remote killswitches and no user-facing audit log is a powerful tool — and a significant amount of trust to place in any single vendor.

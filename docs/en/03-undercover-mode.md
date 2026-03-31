@@ -1,10 +1,10 @@
 # Claude Code's "Undercover Mode": How Anthropic Hides AI Authorship in Open Source
 
-*Dissecting the most controversial feature I found in the Claude Code v2.1.88 source*
+*Dissecting the most controversial feature found in the Claude Code v2.1.88 source*
 
 ## What It Is
 
-Of everything I found in the Claude Code source, this is the one that made me sit up straight. Undercover mode is a system that, when active, instructs the AI to strip all traces of AI involvement from its output — commit messages, PR descriptions, everything. The model is told to present its work as if a human developer wrote it.
+Of everything in the Claude Code source, this is the feature that stands out most starkly. Undercover mode is a system that, when active, instructs the AI to strip all traces of AI involvement from its output — commit messages, PR descriptions, everything. The model is told to present its work as if a human developer wrote it.
 
 Source: `src/utils/undercover.ts`
 
@@ -35,7 +35,7 @@ That "no force-off" detail is telling. They're more worried about accidental cod
 
 ## The Actual Prompt
 
-Here's what the model receives when undercover mode is active. I'm quoting it in full because the framing matters:
+Here is what the model receives when undercover mode is active. The full text is quoted because the framing matters:
 
 ```typescript
 // src/utils/undercover.ts:39-69
@@ -109,7 +109,7 @@ When Anthropic employees use Claude Code on open-source projects with undercover
 4. Project maintainers have no way to identify these as AI contributions
 5. This potentially conflicts with the transparency norms that many open-source communities are actively trying to establish around AI-generated code
 
-I want to be fair here — there's a legitimate trade secret protection argument. If an employee is fixing a bug in a popular open-source library and the commit message accidentally includes "capybara-v8", that's real competitive intelligence leaking out. The concern is valid.
+To be fair — there's a legitimate trade secret protection argument. If an employee is fixing a bug in a popular open-source library and the commit message accidentally includes "capybara-v8", that's real competitive intelligence leaking out. The concern is valid.
 
 ### What Anthropic Is Actually Protecting
 
@@ -129,4 +129,4 @@ The phrasing "Do not blow your cover" frames the AI as an undercover agent opera
 - **Contribution guidelines**: Some projects now explicitly require AI disclosure. Undercover mode makes compliance with those guidelines impossible.
 - **The proportionality question**: Could they achieve trade secret protection by scrubbing only internal details, rather than hiding AI involvement entirely?
 
-I don't think this is black-and-white. Protecting codenames is legitimate. But "write commit messages as a human developer would" combined with "do not blow your cover" goes beyond leak prevention into active concealment. That's a choice Anthropic made, and it's one the open-source community should be aware of.
+This is not black-and-white. Protecting codenames is legitimate. But "write commit messages as a human developer would" combined with "do not blow your cover" goes beyond leak prevention into active concealment. That's a choice Anthropic made, and it's one the open-source community should be aware of.

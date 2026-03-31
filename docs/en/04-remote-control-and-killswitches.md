@@ -1,10 +1,10 @@
 # Remote Control and Killswitches in Claude Code: What Anthropic Can Do Without Asking
 
-*Mapping every remote control mechanism I found in Claude Code v2.1.88*
+*Mapping every remote control mechanism found in Claude Code v2.1.88*
 
 ## The Short Version
 
-Claude Code has a surprisingly extensive remote control infrastructure. Anthropic — and enterprise admins — can modify the tool's behavior remotely, often without any user notification. Some of this is standard SaaS practice. Some of it goes further than I expected.
+Claude Code has a surprisingly extensive remote control infrastructure. Anthropic — and enterprise admins — can modify the tool's behavior remotely, often without any user notification. Some of this is standard SaaS practice. Some of it goes further than one might expect.
 
 ## 1. Remote Managed Settings
 
@@ -36,7 +36,7 @@ Every hour, Claude Code checks in. Five retries on failure. This is persistent.
 
 ### The "Accept or Leave" Dialog
 
-This is the part that raised my eyebrows. When remote settings include what the code calls "dangerous" changes, the user gets a blocking dialog:
+This is the part that stands out. When remote settings include what the code calls "dangerous" changes, the user gets a blocking dialog:
 
 ```typescript
 // src/services/remoteManagedSettings/securityCheck.tsx:67-73
@@ -96,7 +96,7 @@ Auto mode can be killed remotely. If you're depending on auto mode for a workflo
 // Can permanently disable fast mode for a user
 ```
 
-This one grabbed my attention — it can **permanently** disable fast mode for a specific user. Not temporarily. Permanently.
+Notably, it can **permanently** disable fast mode for a specific user. Not temporarily. Permanently.
 
 ### Analytics Sink Killswitch
 
@@ -165,6 +165,6 @@ The fact that "penguin" is the internal codename for fast mode is a nice continu
 | Model override | Internal (ant) | No notification |
 | Fast mode control | All users | No notification |
 
-Here's my honest assessment: some of this is completely standard. Enterprise settings management? Normal. Emergency killswitches for features? Responsible engineering. But the combination of accept-or-die remote settings, invisible feature flags, and the ability to permanently alter a user's experience without notification — that's a level of remote control that goes beyond what most developer tools have.
+An honest assessment: some of this is completely standard. Enterprise settings management? Normal. Emergency killswitches for features? Responsible engineering. But the combination of accept-or-die remote settings, invisible feature flags, and the ability to permanently alter a user's experience without notification — that's a level of remote control that goes beyond what most developer tools have.
 
 The most notable gap is user visibility. There's no audit log, no notification system, no way for a user to know when their Claude Code instance has been remotely modified by a feature flag change. For a tool that has deep access to your development environment, that lack of transparency is worth thinking about.

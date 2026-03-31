@@ -2,7 +2,7 @@
 
 ## 1. Opening -- What the Bridge System Is and Why It Exists
 
-I have spent a genuinely ridiculous amount of time reading through the bridge subsystem in Claude Code, and I think it is one of the most interesting pieces of distributed systems engineering hiding inside what most people think of as "just a CLI tool." The bridge system is the machinery that powers Remote Control -- the feature that lets you start a Claude Code session on your local machine and drive it from the claude.ai web interface. That sounds simple, but the implementation touches on work queues, JWT lifecycle management, WebSocket/SSE hybrid transports, multi-session capacity scheduling, git worktree isolation, and a dual-generation protocol migration that is still in flight.
+The bridge subsystem in Claude Code is one of the most interesting pieces of distributed systems engineering hiding inside what most people think of as "just a CLI tool." The bridge system is the machinery that powers Remote Control -- the feature that lets you start a Claude Code session on your local machine and drive it from the claude.ai web interface. That sounds simple, but the implementation touches on work queues, JWT lifecycle management, WebSocket/SSE hybrid transports, multi-session capacity scheduling, git worktree isolation, and a dual-generation protocol migration that is still in flight.
 
 At its core, the bridge solves a coordination problem: how does a headless CLI process running on your laptop receive instructions from a web browser, execute them with full local filesystem access, and stream results back -- all while handling authentication, reconnection, capacity limits, and graceful degradation? The answer involves roughly 30 source files in `src/bridge/`, and a protocol that has evolved through at least two major versions.
 
@@ -39,7 +39,7 @@ The key files and their responsibilities:
 
 ## 3. Session Lifecycle -- Creation, Heartbeat, Reconnection, Cleanup
 
-A bridge session's life follows a clear arc. I will trace the standalone bridge path since it is the most complete:
+A bridge session's life follows a clear arc. The standalone bridge path is traced here since it is the most complete:
 
 **Registration.** The bridge generates a UUID (`bridgeId`) and calls `POST /v1/environments/bridge` with machine name, directory, branch, git repo URL, max session count, and worker type. The server returns an `environment_id` and `environment_secret`. This is an idempotent operation -- passing a `reuseEnvironmentId` re-attaches to an existing environment:
 
@@ -123,7 +123,7 @@ export const DEFAULT_POLL_CONFIG: PollIntervalConfig = {
 }
 ```
 
-I find the at-capacity behavior particularly well-designed. When all session slots are full, the bridge enters a heartbeat-only loop that still extends work leases without polling the database-backed work queue. The heartbeat loop and at-capacity poll are composable -- both can run simultaneously, with the heartbeat periodically yielding to a poll cycle at a configurable deadline. This is the kind of operational knob that matters at scale.
+The at-capacity behavior is particularly well-designed. When all session slots are full, the bridge enters a heartbeat-only loop that still extends work leases without polling the database-backed work queue. The heartbeat loop and at-capacity poll are composable -- both can run simultaneously, with the heartbeat periodically yielding to a poll cycle at a configurable deadline. This is the kind of operational knob that matters at scale.
 
 The capacity wake mechanism (`capacityWake.ts`) is a clean abstraction that lets the poll loop sleep while at capacity but wake immediately when a session ends:
 
@@ -388,7 +388,7 @@ These summaries bubble up through the logger and appear in both the CLI status d
 
 ## 9. Error Handling and Resilience
 
-The bridge has one of the most thorough error handling strategies I have seen in a Node.js application. It manages two independent error tracks with exponential backoff:
+The bridge has one of the most thorough error handling strategies in any Node.js application of comparable scope. It manages two independent error tracks with exponential backoff:
 
 **Connection errors** (ECONNREFUSED, ECONNRESET, ETIMEDOUT, ENETUNREACH, EHOSTUNREACH, 5xx): Start at 2s, cap at 2 minutes, give up after 10 minutes.
 
@@ -426,7 +426,7 @@ Without this, opening your laptop after a night would immediately hit the give-u
 
 **Fatal errors** (`BridgeFatalError`) are non-retryable: 401 (auth failed), 403 (access denied), 404 (not found), 410 (environment expired). The 410 case gets a human-friendly message: "Remote Control session has expired. Please restart." There is also an `isExpiredErrorType` helper that checks for both "expired" and "lifetime" substrings in the error type -- a pragmatic approach to handling evolving server error taxonomy.
 
-**Suppressible 403s** are another nuance I appreciated. Some 403 errors (like missing `external_poll_sessions` scope or `environments:manage` permission) are cosmetic -- they do not affect core functionality and should not be shown to users. `isSuppressible403` checks for these patterns and silently logs them.
+**Suppressible 403s** are another notable nuance. Some 403 errors (like missing `external_poll_sessions` scope or `environments:manage` permission) are cosmetic -- they do not affect core functionality and should not be shown to users. `isSuppressible403` checks for these patterns and silently logs them.
 
 **stopWork retry** uses a 3-attempt exponential backoff with base delay of 1 second (`bridgeMain.ts:1627-1676`). Auth errors short-circuit. This prevents server-side zombie work items.
 
