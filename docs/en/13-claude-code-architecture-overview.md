@@ -338,36 +338,6 @@ This makes the runtime more operationally flexible, but it also makes it more co
 
 That is exactly how modern SaaS-style agent products behave in practice.
 
----
-
-## 11. What the Architecture Optimizes For
-
-After reading across the codebase, Claude Code appears to be optimized for the following priorities:
-
-### 1. Real-world robustness over conceptual neatness
-
-The code frequently chooses practical error recovery over elegant abstraction.
-
-### 2. Tool-use effectiveness over pure chat quality
-
-The system is structured around tool execution, not around conversational minimalism.
-
-### 3. Long-session continuity over short-turn simplicity
-
-Persistence, compaction, and memory exist because sessions are expected to last.
-
-### 4. Operational control over static product behavior
-
-Feature flags, prompt patches, and remote settings all point in this direction.
-
-### 5. Safety layers over a single trust mechanism
-
-Permissions, validation, rules, classifiers, and sandboxing are all stacked rather than collapsed into one gate.
-
-These are the priorities of a production agent, not a demo.
-
----
-
 ## 12. Where the Complexity Comes From
 
 The system's complexity is not coming from one source. It comes from the interaction of several hard problems:
@@ -392,34 +362,3 @@ For example:
 - prompt design matters more once tools and policies are injected dynamically
 
 That interaction effect is the real architectural story.
-
----
-
-## 13. Final Assessment
-
-Claude Code is best understood as a **production-grade agent runtime** with a terminal interface, not as a terminal UI with a model attached.
-
-Its architecture combines:
-
-- prompt control
-- stateful execution
-- tool runtime design
-- permission enforcement
-- context compression
-- persistence
-- external integration
-- operational control surfaces
-
-The result is not a small or elegant toy. It is a deeply practical system shaped by product pressure, failure recovery, latency concerns, and the realities of letting a model act on a developer's machine.
-
-That is what makes it worth studying.
-
-For deeper dives into specific subsystems, continue with:
-
-- [06-agent-loop-deep-dive.md](06-agent-loop-deep-dive.md)
-- [07-tool-system-architecture.md](07-tool-system-architecture.md)
-- [08-permission-security-model.md](08-permission-security-model.md)
-- [09-system-prompt-engineering.md](09-system-prompt-engineering.md)
-- [10-mcp-integration.md](10-mcp-integration.md)
-- [11-context-window-management.md](11-context-window-management.md)
-- [12-state-management.md](12-state-management.md)

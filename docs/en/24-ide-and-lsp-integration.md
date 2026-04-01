@@ -442,15 +442,3 @@ Server configurations include:
 ### Re-initialization on Plugin Refresh
 
 A notable edge case addressed in `reinitializeLspServerManager()` (manager.ts:226-253): the plugin loader is memoized and can be called very early in startup before marketplace plugins are reconciled, caching an empty plugin list. Unlike commands, agents, hooks, and MCP servers, LSP was not re-initialized on plugin refresh until this was identified as a bug (GitHub issue #15521). The fix ensures that when plugins are refreshed, the old LSP manager is shut down and a new one is created with the updated plugin configuration.
-
----
-
-## Architectural Summary
-
-The IDE and LSP integration system represents one of Claude Code's more complex subsystems, involving concurrent process management, network protocol handling, cross-platform path normalization, and asynchronous event-driven communication. Key design principles observed throughout:
-
-- **Graceful degradation**: LSP is entirely optional; failures are logged but never block core functionality
-- **Lazy initialization**: Heavy dependencies like `vscode-jsonrpc` are loaded only when needed
-- **Bounded resource usage**: LRU caches, diagnostic volume limits, and restart caps prevent unbounded growth
-- **Cross-platform awareness**: Extensive handling of WSL, Windows, macOS, and Linux path and process differences
-- **Factory function pattern**: Consistent use of closures over classes for state encapsulation throughout the LSP subsystem

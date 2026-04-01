@@ -164,15 +164,3 @@ It is a gacha system for developer tools. The SNARK stat on a coding companion i
 ```
 
 This is a background subagent that autonomously processes and consolidates the AI's memories during idle time. Think of it as the AI reflecting on what it's learned from your codebase while you're away.
-
-## Where This Is All Heading
-
-Looking at these features together, three clear directions emerge:
-
-1. **New models on deck**: Numbat is next, with Opus 4.7 and Sonnet 4.8 in the pipeline
-2. **Autonomous agency**: KAIROS mode represents a shift from assistant to independent agent — one that can operate unattended, take proactive actions, and notify you when it needs attention
-3. **Multimodal expansion**: Voice input is ready, browser automation is built, workflow orchestration is coming
-
-The trajectory is unmistakable. Claude Code is evolving from a coding assistant you chat with into an always-on autonomous development agent that monitors your repos, makes decisions, coordinates with other agents, and reaches out when it needs you.
-
-Whether that future excites or concerns readers probably depends on how much trust is placed in the remote control infrastructure documented in the previous report. An autonomous agent with extensive remote killswitches and no user-facing audit log is a powerful tool — and a significant amount of trust to place in any single vendor.

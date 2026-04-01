@@ -536,17 +536,3 @@ The model picker presented to users varies dramatically by subscription tier, as
 - **PAYG third-party**: Default is Sonnet 4.5 (older stable); supports custom model strings via `ANTHROPIC_DEFAULT_*_MODEL` environment variables with custom names and descriptions
 
 The 1M context variants are conditionally shown based on `checkOpus1mAccess()` and `checkSonnet1mAccess()` (check1mAccess.ts), which gate on both the `CLAUDE_CODE_DISABLE_1M_CONTEXT` environment variable and, for subscribers, whether extra usage billing is enabled.
-
----
-
-## Summary
-
-The model selection and routing system represents one of Claude Code's most complex subsystems, addressing the combinatorial explosion of model versions, API providers, subscription tiers, capability flags, and user preferences. The architecture follows several consistent design principles:
-
-- **Alias indirection**: Users interact with stable family names; version pinning is an explicit opt-in
-- **Provider abstraction**: A single config registry maps each model to all provider formats
-- **Fail-safe defaults**: Unknown models default to safe assumptions (thinking enabled, adaptive thinking enabled on 1P)
-- **Progressive enhancement**: Capabilities are detected per-model with override mechanisms at every level
-- **Subscription awareness**: Model defaults, pricing display, and feature access all vary by tier
-
-Code markers (`@[MODEL LAUNCH]`) throughout the codebase annotate every site that requires updates when a new model generation is introduced, providing a mechanical checklist for launch operations.

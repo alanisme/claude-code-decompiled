@@ -240,21 +240,3 @@ will feel brittle, no matter how strong the model is.
 Claude Code's transcript and compaction-boundary architecture exists to avoid that brittleness.
 
 It is part of what makes the product feel operationally durable.
-
----
-
-## 11. Final Assessment
-
-The transcript subsystem in Claude Code is not overbuilt for its use case. It is built to match the reality of long-running, tool-heavy, stateful agent sessions.
-
-Its key ideas are:
-
-- history is structured, not just appended
-- branching is normal
-- compaction changes the meaning of future history
-- resume must understand storage semantics, not just message text
-- continuity is a core product property
-
-That is why transcript storage, compaction metadata, and resume logic are deeply linked in the codebase.
-
-For a disposable assistant, this would be too much machinery. For a serious coding agent, it is exactly the sort of machinery you need.

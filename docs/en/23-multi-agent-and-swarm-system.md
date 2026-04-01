@@ -457,21 +457,3 @@ In-process teammates integrate with the leader's UI through several mechanisms:
 ### Model Selection
 
 Teammate model selection defaults to the latest Opus model through `getHardcodedTeammateModelFallback()` (`src/utils/swarm/teammateModel.ts:8-9`), which returns the provider-aware model ID for the current API provider (Anthropic, Bedrock, Vertex, or Foundry). This can be overridden per-teammate via the `model` field in spawn configuration, or globally via the `teammateDefaultModel` configuration setting.
-
----
-
-## Architectural Summary
-
-The swarm system represents a layered architecture:
-
-| Layer | Components | Responsibility |
-|-------|-----------|----------------|
-| **Execution** | `InProcessBackend`, `PaneBackendExecutor`, `TmuxBackend`, `ITermBackend` | Process/pane lifecycle management |
-| **Identity** | `TeammateContext`, `TeammateIdentity`, `AsyncLocalStorage` | Context isolation and agent identification |
-| **Communication** | `teammateMailbox`, `SendMessageTool` | Inter-agent messaging and coordination |
-| **Permission** | `permissionSync`, `leaderPermissionBridge` | Centralized permission delegation |
-| **State** | `TeamFile`, `AppState.tasks`, `AppState.teamContext` | Persistent and runtime state tracking |
-| **UI** | `teammateLayoutManager`, task pills, worker badges | Multi-agent output rendering |
-| **Lifecycle** | `teammateInit`, `reconnection`, `cleanupSessionTeams` | Startup, recovery, and teardown |
-
-The design prioritizes safety (permission centralization at the leader), resource efficiency (message capping, independent abort controllers), and operational flexibility (transparent backend switching between terminal pane and in-process execution modes). The file-based mailbox protocol ensures that all communication is durable and inspectable, while the leader permission bridge provides a low-latency UI path for the common in-process case.

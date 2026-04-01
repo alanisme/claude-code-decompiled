@@ -411,13 +411,3 @@ Compared to other coding agents:
 - **vs. OpenAI Codex CLI**: Claude Code's bash security analysis is significantly more thorough, covering Zsh-specific attack vectors, heredoc edge cases, and shell metacharacter escapes that simpler implementations would miss.
 
 The main architectural differentiator is the layered approach: application-level permission rules, an AI classifier, and OS-level sandboxing all operate simultaneously. A bypass at one layer (e.g., tricking the classifier) is still caught by another (the sandbox blocks the file write). This is the correct architecture for a system where the threat model includes both accidental damage and adversarial prompt injection.
-
----
-
-## Summary
-
-Claude Code's security model is a substantial piece of engineering. The permission system spans approximately 30+ files with thousands of lines of validation logic. The layered architecture (permission modes, static rules, AI classifier, OS sandbox) provides genuine defense in depth. The attention to obscure attack vectors (Zsh modules, bare git repos, IPv4-mapped IPv6 SSRF, case-insensitive filesystem bypasses) suggests a team that actively red-teams its own system.
-
-The primary risk is complexity itself. The interaction between 23+ bash security validators, multiple permission rule sources, mode-specific fast paths, and the classifier creates a system that is difficult to reason about holistically. The extensive inline security comments -- many reading like post-incident notes -- suggest that this complexity has already produced subtle bugs that were discovered and patched. This is both reassuring (bugs are found and fixed) and concerning (the system is complex enough to harbor them).
-
-For users choosing a permission mode, the guidance is straightforward: `default` mode with the sandbox enabled provides the strongest guarantees. `acceptEdits` is a reasonable intermediate. `bypassPermissions` should only be used in fully trusted, ephemeral environments. `auto` mode (where available) offers a practical middle ground, but users should understand they are delegating security decisions to a probabilistic system.

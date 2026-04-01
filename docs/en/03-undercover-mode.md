@@ -96,37 +96,3 @@ function maskModelCodename(baseName: string): string {
 ```
 
 Multiple layers of defense. They really don't want codenames getting out.
-
-## Why This Matters
-
-### The Open Source Angle
-
-When Anthropic employees use Claude Code on open-source projects with undercover mode active:
-
-1. The code is AI-generated, but commits look human-authored
-2. No `Co-Authored-By: Claude` line gets added
-3. No "Generated with Claude Code" markers appear
-4. Project maintainers have no way to identify these as AI contributions
-5. This potentially conflicts with the transparency norms that many open-source communities are actively trying to establish around AI-generated code
-
-To be fair — there's a legitimate trade secret protection argument. If an employee is fixing a bug in a popular open-source library and the commit message accidentally includes "capybara-v8", that's real competitive intelligence leaking out. The concern is valid.
-
-### What Anthropic Is Actually Protecting
-
-The primary purpose, based on the code, is preventing leaks of:
-
-- Internal model codenames (competitive intelligence)
-- Unreleased version numbers (market timing)
-- Internal infrastructure details (security)
-
-This makes business sense. The question is whether the approach — hiding AI involvement entirely rather than just scrubbing internal details — goes further than necessary.
-
-### The Ethical Gray Area
-
-The phrasing "Do not blow your cover" frames the AI as an undercover agent operating in the open-source community. There are reasonable arguments on both sides here, but it's worth asking:
-
-- **Transparency**: Should open-source projects know when contributions are AI-generated? Many project maintainers think so.
-- **Contribution guidelines**: Some projects now explicitly require AI disclosure. Undercover mode makes compliance with those guidelines impossible.
-- **The proportionality question**: Could they achieve trade secret protection by scrubbing only internal details, rather than hiding AI involvement entirely?
-
-This is not black-and-white. Protecting codenames is legitimate. But "write commit messages as a human developer would" combined with "do not blow your cover" goes beyond leak prevention into active concealment. That's a choice Anthropic made, and it's one the open-source community should be aware of.

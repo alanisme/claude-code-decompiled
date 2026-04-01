@@ -292,22 +292,3 @@ Instead, it tries to make Bash:
 for an AI agent to use it in real developer workflows.
 
 That is a much more serious design problem than just "run this shell command for the model."
-
----
-
-## 13. Final Assessment
-
-BashTool is the clearest place where Claude Code stops looking like a chat product and starts looking like an operating environment.
-
-It has to mediate between:
-
-- model intent
-- user trust
-- shell complexity
-- filesystem risk
-- task orchestration
-- long-running workflow ergonomics
-
-That is why it is so large and so layered.
-
-And that is why, if you are studying how production AI coding agents are actually built, BashTool deserves to be treated as a first-class subsystem, not as a side utility.
